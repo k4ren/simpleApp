@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-text>
+    <h4>Log in</h4>
+  </ion-text>
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input type="email" formControlName="email"></ion-input>
+    </ion-item>
+    <ion-text color="danger" *ngIf="loginForm.get('email').hasError('required') && loginForm.get('email').touched">
+      Email is required
+    </ion-text>
+    <ion-item>
+      <ion-label position="floating">Password</ion-label>
+      <ion-input type="password" formControlName="password"></ion-input>
+    </ion-item>
+    <ion-text color="danger"
+      *ngIf="loginForm.get('password').hasError('required') && loginForm.get('password').touched">
+      Password is required
+    </ion-text>
+    <!-- <ion-item lines="none">
+      <ion-button fill="clear" size="small" color="tertiary">Forgot password?</ion-button>
+    </ion-item> -->
+    <ion-button expand="full" color="primary" type="submit" [disabled]="loginForm.invalid">Log in</ion-button>
+  </form>
+</ion-content>
