@@ -30,7 +30,7 @@ export class LoginPage implements OnInit {
     .subscribe( res => {
       if( res.token ) {
         // localStorage.setItem('token', res.token);
-        console.log('login!: ',res);        
+        // console.log('login!: ',res);
         this.router.navigate(["list"]);
       } else {
         this.presentToastOnError();

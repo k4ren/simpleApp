@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 const httpOptions = {
@@ -14,7 +14,9 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
-  apiUrl='http://localhost:8000/api/'
+  apiUrl='http://localhost:8000/api/';
+
+  authenticationState = new BehaviorSubject(false);
 
   constructor(private http: HttpClient) { }
 
@@ -42,6 +44,11 @@ export class AuthService {
 
   /** Log a Service message with the MessageService */
   private log(message: string) {
+    this.authenticationState.next(true);
     console.log(message);
+  }
+
+  isAuthenticated() {
+    return this.authenticationState.value;
   }
 }
