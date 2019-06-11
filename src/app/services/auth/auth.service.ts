@@ -1,29 +1,30 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json'
+  })
+};
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  apiUrl='http://127.0.0.1:8000/api/'
+  apiUrl='http://localhost:8000/api/'
 
   constructor(private http: HttpClient) { }
 
   login (data): Observable<any> {
-    return this.http.post<any>(this.apiUrl + 'login', data, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .pipe(
-        tap(_ => this.log('login')),
-        catchError(this.handleError('login', []))
-      );
+    return this.http.post<any>(this.apiUrl + 'login', data, httpOptions)
+    .pipe(
+      tap(_ => this.log('login')),
+      catchError(this.handleError('login', data))
+    );
   }
-
 
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
@@ -39,7 +40,7 @@ export class AuthService {
     };
   }
 
-  /** Log a HeroService message with the MessageService */
+  /** Log a Service message with the MessageService */
   private log(message: string) {
     console.log(message);
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth/auth.service'
+import { ToastController } from "@ionic/angular";
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginPage implements OnInit {
   constructor(
     public formBuilder: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastController: ToastController
   ) { 
     this.loginForm = formBuilder.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
@@ -24,15 +26,25 @@ export class LoginPage implements OnInit {
   }
   
   login(){
-    console.log(this.loginForm.value);
     this.authService.login(this.loginForm.value)
-    .subscribe(
-      res => {
-        console.log(res)      
-    }, (err) => {
-      console.log(err)      
-    })
-    // this.router.navigate(["home"]);
+    .subscribe( res => {
+      if( res.token ) {
+        // localStorage.setItem('token', res.token);
+        console.log('login!: ',res);        
+        this.router.navigate(["list"]);
+      } else {
+        this.presentToastOnError();
+      }
+    });
+  }
+
+  async presentToastOnError() {
+    const toast = await this.toastController.create({
+      message: 'Incorrect Credentials, Try Again',
+      position: 'middle',
+      duration: 1500
+    });
+    toast.present();
   }
 
   ngOnInit() {
